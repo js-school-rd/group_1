@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Balance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Alert -->
+    <div
+      id="notification"
+      class="hidden fixed top-5 right-5 p-4 rounded-lg shadow-lg text-white font-bold transition-all duration-500 z-50"
+    ></div>
+
+    <!-- Calculator Body -->
+    <div class="calculator">
+      <div class="balance-container">
+        <div id="balance-view">
+          <h1 class="text-3xl font-bold text-white m-0">
+            Balance: <span id="balance-display">1000</span> $
+          </h1>
+          <button onclick="toggleEdit(true)" class="edit-btn">
+            Change Limit
+          </button>
+        </div>
+
+        <div id="balance-edit" style="display: none">
+          <input type="number" id="new-budget-input" placeholder="New Limit" />
+          <div class="flex justify-center gap-2">
+            <button onclick="saveNewBudget()" class="save-btn">Save</button>
+            <button onclick="toggleEdit(false)" class="cancel-btn">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Currency -->
+      <div class="currency-tabs">
+        <button
+          class="currency-btn active"
+          onclick="selectCurrency('USD', this)"
+        >
+          USD
+        </button>
+        <button class="currency-btn" onclick="selectCurrency('EUR', this)">
+          EUR
+        </button>
+        <button class="currency-btn" onclick="selectCurrency('RUB', this)">
+          RUB
+        </button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="main-tabs">
+        <button
+          id="tab-expense"
+          class="tab-btn active"
+          onclick="switchTab('expense')"
+        >
+          Expenses
+        </button>
+        <button id="tab-income" class="tab-btn" onclick="switchTab('income')">
+          Income
+        </button>
+      </div>
+
+      <!-- Section Input Expense -->
+      <div id="section-expense" class="tab-content">
+        <div class="input-wrapper-pro">
+          <div class="input-main-part">
+            <label>Add</label>
+            <input type="number" id="expense-input" placeholder="0" />
+          </div>
+          <div class="input-currency-part">
+            <img
+              id="expense-flag"
+              src="https://cdn-icons-png.flaticon.com/512/197/197374.png"
+              alt="flag"
+            />
+            <span id="expense-code">USD</span>
+          </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="category-grid-dark">
+          <button class="category-btn" onclick="spendMoney('Food')">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/6686/6686729.png"
+            />
+            <span>Food</span>
+          </button>
+          <button class="category-btn" onclick="spendMoney('Rent')">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/10812/10812271.png"
+            />
+            <span>Rent</span>
+          </button>
+          <button class="category-btn" onclick="spendMoney('Transport')">
+            <img
+              src="   https://cdn-icons-png.flaticon.com/512/565/565352.png "
+            />
+            <span>Transport</span>
+          </button>
+          <button class="category-btn" onclick="spendMoney('Healthcare')">
+            <img
+              src="   https://cdn-icons-png.flaticon.com/512/154/154016.png "
+            />
+            <span>Healthcare</span>
+          </button>
+          <button class="category-btn" onclick="spendMoney('Energy')">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/4439/4439957.png"
+            />
+            <span>Energy</span>
+          </button>
+          <button class="category-btn" onclick="spendMoney('Kids')">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/10331/10331189.png"
+            />
+            <span>Kids</span>
+          </button>
+          <button class="category-btn" onclick="spendMoney('Croissants')">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3014/3014502.png"
+            />
+            <span>Croissants</span>
+          </button>
+          <button class="category-btn" onclick="spendMoney('More')">
+            <img src="https://cdn-icons-png.flaticon.com/512/570/570223.png" />
+            <span>More</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Section Input Income -->
+      <div id="section-income" class="tab-content" style="display: none">
+        <div class="input-wrapper-pro">
+          <div class="input-main-part">
+            <label>Income</label>
+            <input type="number" id="income-input" placeholder="0" />
+          </div>
+          <div class="input-currency-part">
+            <img
+              id="income-flag"
+              src="https://cdn-icons-png.flaticon.com/512/197/197374.png"
+              alt="flag"
+            />
+            <span id="income-code">USD</span>
+          </div>
+        </div>
+        <button class="main-btn income-btn" onclick="addIncome()">
+          Add income
+        </button>
+      </div>
+
+      <!-- Section History -->
+      <div class="history-section mt-6 border-t border-white/10 pt-4">
+        <h3 class="text-lg font-bold text-white/50 mb-4 text-left">History</h3>
+        <div id="history-list">
+          <div
+            id="empty-placeholder"
+            class="flex flex-col gap-2 items-center justify-center py-6 opacity-40"
+          >
+            <img
+              class="invert w-12"
+              src="   https://cdn-icons-png.flaticon.com/512/17200/17200875.png "
+              class="w-12 h-12 mb-2 grayscale"
+            />
+            <p class="text-gray-400 text-sm">The story is still empty</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,329 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background-color: #0b2532;
+  overflow-x: hidden;
+}
+
+.calculator {
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+  border-radius: 24px;
+  gap: 20px;
+  width: 480px;
+  min-height: 600px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px solid #1d475c;
+}
+
+#balance-view {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Inputs */
+.input-wrapper-pro {
+  display: flex;
+  align-items: center;
+  background: #ffffff14 !important;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  padding: 0 16px;
+  margin-bottom: 15px;
+  height: 64px;
+}
+
+.input-main-part {
+  flex: 1;
+  text-align: left;
+}
+
+.input-main-part label {
+  display: block;
+  font-size: 10px;
+  color: #6b7280;
+  margin-top: 4px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.input-main-part input {
+  width: 100% !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: 20px !important;
+  font-weight: bold !important;
+  color: #ffffff !important;
+  outline: none !important;
+  background: transparent !important;
+}
+
+.input-currency-part {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 12px;
+  border-left: 1px solid #e5e7eb;
+  height: 32px;
+}
+
+.input-currency-part img {
+  width: 24px !important;
+  height: 16px !important;
+  min-width: 24px !important;
+  max-width: 24px !important;
+  object-fit: cover !important;
+  border-radius: 2px;
+}
+
+.input-currency-part span {
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+/* Categories */
+.category-grid-dark {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.category-grid-dark button {
+  background: rgba(44, 62, 80, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 15px 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.category-grid-dark button:hover {
+  background: rgba(52, 73, 94, 0.8);
+  transform: translateY(-3px);
+}
+
+.category-grid-dark button img {
+  width: 28px;
+  height: 28px;
+  margin-bottom: 8px;
+  filter: brightness(0) invert(1);
+}
+
+.category-grid-dark button span {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Tabs */
+.main-tabs {
+  display: flex;
+  background: #f3f4f6;
+  padding: 4px;
+  border-radius: 14px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: none;
+  font-weight: 700;
+  color: #6b7280;
+}
+
+.tab-btn.active {
+  background: white;
+  color: #02332f;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.main-btn {
+  width: 100% !important;
+  padding: 16px !important;
+  background-color: #28726c !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 14px !important;
+  cursor: pointer;
+  font-weight: bold !important;
+  font-size: 16px !important;
+  display: block !important;
+  margin-top: 10px;
+}
+
+button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  filter: grayscale(100%);
+  transition: all 0.3s ease;
+}
+
+.main-btn:hover {
+  background-color: #28726c !important;
+}
+
+.edit-btn {
+  background: #ffffff24;
+  border: 1px dashed #ffffff24;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+#new-budget-input {
+  width: 100% !important;
+  background-color: white !important;
+  color: #1f2937 !important;
+  border-radius: 10px !important;
+  padding: 12px !important;
+  text-align: center;
+  border: 1px solid #d1d5db !important;
+  margin-bottom: 10px !important;
+}
+
+.save-btn {
+  background-color: #10b981 !important;
+  color: white !important;
+  padding: 10px 20px !important;
+  border-radius: 12px !important;
+  font-weight: bold !important;
+  border: none !important;
+  cursor: pointer;
+}
+.cancel-btn {
+  background-color: #4b5563 !important;
+  color: white !important;
+  padding: 10px 20px !important;
+  border-radius: 12px !important;
+  font-weight: bold !important;
+  border: none !important;
+  cursor: pointer;
+}
+
+/* History */
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.history-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.history-icon-bg {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.history-icon-bg img {
+  width: 22px !important;
+  height: 22px !important;
+  filter: brightness(0) invert(1) opacity(0.8);
+}
+
+.history-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+.history-name {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14px;
+}
+.history-time {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 11px;
+}
+
+.history-amount {
+  font-weight: 700;
+  font-size: 16px;
+}
+.type-income {
+  color: #4ade80 !important;
+}
+.type-expense {
+  color: #f87171 !important;
+}
+
+#history-list {
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+#history-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+#history-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 10px;
+}
+
+#history-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+#history-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+#history-list {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+/* Currency */
+.currency-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+.currency-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  color: #4b5563;
+}
+.currency-btn.active {
+  border-color: #28726c;
+  background: #ecffe6;
+  color: #28726c;
+}
