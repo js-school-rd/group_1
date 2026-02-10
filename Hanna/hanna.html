@@ -9,19 +9,38 @@
 
 <body>
   <header></header>
-  <div class="containerMain">
-    <div id="budgetOutputContainer">
-      <span id="budgetOutput"></span>
-      <span>$</span>
-    </div>
-    <div id="amountInputContainer">
-      <div id="amountInputForm">
-        <form><input id="amountInput" placeholder="Amount" /></form>
+
+  <main>
+    <section id="screenMain">
+      <div class="budget">
+        <div class="budget__output">
+          <span id="budgetOutput"></span>
+          <span>$</span>
+        </div>
+
+        <div class="budget__input">
+          <div class="budget__input-field">
+            <form><input id="amountInput" placeholder="Amount" /></form>
+          </div>
+
+          <div class="budget__input-currency">$</div>
+        </div>
       </div>
-      <div id="amountInputCurrency">$</div>
-    </div>
-    <div id="expenseCardOuterContainer"></div>
-  </div>
+
+      <div class="expenses" id="expenseCardOuterContainer"></div>
+    </section>
+
+    <section id="screenHistory" style="display: none">
+      <h2>History</h2>
+      <div id="historyList"></div>
+    </section>
+  </main>
+
+  <nav class="bottom__nav">
+    <button id="navMain">Main</button>
+    <button id="navHistory">History</button>
+  </nav>
+
   <script src="hanna.js"></script>
   <footer></footer>
 </body>

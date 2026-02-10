@@ -12,20 +12,20 @@ body {
 *::after {
   box-sizing: border-box;
 }
-.containerMain {
+main {
   width: 350px;
   margin: auto;
   font-family: "Montserrat";
   vertical-align: middle;
 }
 
-#budgetOutputContainer {
+.budget__output {
   display: flex;
   justify-content: left;
   font-size: 3em;
 }
 
-#amountInputContainer {
+.budget__input {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -34,7 +34,7 @@ body {
   padding: 10px 0 10px 0;
 }
 
-#amountInputContainer input {
+.budget__input input {
   border: 3px solid #3f3f3f57;
   border-radius: 10px 0 0 10px;
   background-color: transparent;
@@ -48,11 +48,11 @@ body {
 #amountInput::placeholder {
   color: rgba(255, 255, 255, 0.2);
 }
-#amountInputForm {
+.budget__input-field {
   flex: 1;
 }
 
-#amountInputCurrency {
+.budget__input-currency {
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 0 10px 10px 0;
   padding: 10px 20px;
@@ -99,10 +99,55 @@ body {
   text-align: center;
 }
 
-.over {
+.value--negative {
   color: rgba(255, 0, 0, 0.35);
   text-shadow:
     0 0 4px rgba(255, 0, 0, 0.3),
     0 0 10px rgba(255, 0, 0, 0.2),
     0 0 20px rgba(255, 0, 0, 0.1);
+}
+
+.bottom__nav {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 350px;
+
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 8px;
+}
+
+.bottom__nav button {
+  flex: 1;
+  height: 44px;
+
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+
+  color: rgba(255, 255, 255, 0.6);
+  font-family: "Montserrat";
+  font-size: 0.9em;
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.bottom__nav button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+
+.bottom__nav button.active {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
 }

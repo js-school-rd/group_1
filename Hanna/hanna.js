@@ -65,17 +65,17 @@ const expenseTypesMockDB = [
 
 function returnExpenseCardData(expenseType) {
   const container = document.createElement("button");
-  container.className = "expenseCardInnerContainer";
+  container.classList.add("expenseCardInnerContainer");
 
   const cardIconContainer = document.createElement("div");
-  cardIconContainer.className = "expenseCardIcon";
+  cardIconContainer.classList.add("expenseCardIcon");
   const cardICon = document.createElement("img");
   cardICon.src = expenseType.icon;
   cardICon.alt = expenseType.key;
   cardIconContainer.appendChild(cardICon);
 
   const cardHeaderContainer = document.createElement("div");
-  cardHeaderContainer.className = "expenseCardHeader";
+  cardHeaderContainer.classList.add("expenseCardHeader");
   cardHeaderContainer.textContent = expenseType.name;
 
   container.appendChild(cardIconContainer);
@@ -87,7 +87,7 @@ function returnExpenseCardData(expenseType) {
 amountInput.addEventListener;
 
 function displayBudgetAfterDOMLoading(initialBudget) {
-  return (document.getElementById("budgetOutput").innerHTML = initialBudget);
+  document.getElementById("budgetOutput").textContent = initialBudget;
 }
 
 displayBudgetAfterDOMLoading(initialBudget);
@@ -100,7 +100,7 @@ function makeCalcs() {
   }
   let budgetBeforeCalcs = initialBudget;
   initialBudget = calcBudget(initialBudget, budgetInputValue);
-  updateBudgetUI(
+  renderBudget(
     initialBudget,
     budgetBeforeCalcs,
     budgetInputValue,
@@ -108,7 +108,6 @@ function makeCalcs() {
   );
 }
 
-//обработчик энтера
 amountInput.addEventListener("keydown", function (keyboardButton) {
   if (keyboardButton.key === "Enter") {
     keyboardButton.preventDefault();
@@ -118,12 +117,27 @@ amountInput.addEventListener("keydown", function (keyboardButton) {
 
 function displayExpenseCard(expenseTypesMockDB) {
   const container = document.getElementById("expenseCardOuterContainer");
-  container.innerHTML = "";
+  container.replaceChildren();
 
   for (let i = 0; i < expenseTypesMockDB.length; i++) {
     const card = returnExpenseCardData(expenseTypesMockDB[i]);
+
     card.addEventListener("click", function () {
-      makeCalcs();
+      try {
+        const amount = parseFloat(amountInput.value);
+
+        const tx = transactionService.createExpense({
+          amount,
+          category: expenseTypesMockDB[i].key,
+        });
+
+        addTransaction(tx);
+        makeCalcs();
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        amountInput.value = "";
+      }
     });
 
     container.appendChild(card);
@@ -132,18 +146,116 @@ function displayExpenseCard(expenseTypesMockDB) {
 
 displayExpenseCard(expenseTypesMockDB);
 
-//const expenseMockDB = [{ amount: 200, type: "FOOD", date: "2026-01-01" }];
 function calcBudget(currentBudget, expenses) {
   if (isNaN(expenses)) expenses = 0;
   return currentBudget - expenses;
 }
 
-function updateBudgetUI(newBudget, budgetBeforeCalcs, expenses, elemToEdit) {
+function renderBudget(newBudget, budgetBeforeCalcs, expenses, elemToEdit) {
   if (expenses > budgetBeforeCalcs) {
-    elemToEdit.classList.add("over");
+    elemToEdit.classList.add("value--negative");
   } else {
-    elemToEdit.classList.remove("over");
+    elemToEdit.classList.remove("value--negative");
   }
   elemToEdit.textContent = newBudget;
-  amountInput.value = "";
 }
+
+function transaction(amount, category, createdAt, meta) {
+  this.amount = amount;
+  this.category = category;
+  this.createdAt = createdAt;
+  this.meta = meta || {};
+}
+
+transaction.prototype.f = function () {
+  const metaText =
+    this.meta && Object.keys(this.meta).length > 0
+      ? ` - ${JSON.stringify(this.meta)}`
+      : "";
+  return `$${this.amount} - ${this.category} - ${this.createdAt.toLocaleDateString()}${metaText}`;
+};
+
+transaction.prototype.toJson = function () {
+  return {
+    amount: this.amount,
+    category: this.category,
+    createdAt: this.createdAt,
+    meta: this.meta,
+  };
+};
+
+const transactionService = {
+  createExpense: function ({
+    amount,
+    category,
+    meta = {},
+    createdAt = new Date(),
+  }) {
+    if (typeof amount !== "number" || amount <= 0) {
+      throw new Error("Amount must be a number greater than 0");
+    }
+    return new transaction(amount, category, createdAt, meta);
+  },
+};
+
+const transactions = [];
+function addTransaction(tx) {
+  transactions.push(tx);
+}
+
+const mainScreen = {
+  screenEl: document.getElementById("screenMain"),
+
+  show() {
+    this.screenEl.style.display = "block";
+  },
+
+  hide() {
+    this.screenEl.style.display = "none";
+  },
+
+  render() {},
+};
+
+const historyScreen = {
+  screenEl: document.getElementById("screenHistory"),
+  listEl: document.getElementById("historyList"),
+
+  show() {
+    this.screenEl.style.display = "block";
+  },
+
+  hide() {
+    this.screenEl.style.display = "none";
+  },
+
+  render(transactions) {
+    this.listEl.replaceChildren();
+    Array.prototype.forEach.call(transactions, (tx) => {
+      const item = document.createElement("div");
+      item.textContent = tx.f();
+      this.listEl.appendChild(item);
+    });
+  },
+};
+
+const screenManager = {
+  showMain() {
+    mainScreen.show();
+    historyScreen.hide();
+  },
+
+  showHistory() {
+    mainScreen.hide();
+    historyScreen.render(transactions);
+    historyScreen.show();
+  },
+};
+
+document.getElementById("navMain").addEventListener("click", () => {
+  screenManager.showMain();
+});
+
+document.getElementById("navHistory").addEventListener("click", () => {
+  screenManager.showHistory();
+});
