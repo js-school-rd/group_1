@@ -1,5 +1,6 @@
 let initialBudget = 5000;
 const amountInput = document.getElementById("amountInput");
+const analytics = createAnalyticsModule([]);
 
 //моковая БД
 const expenseTypesMockDB = [
@@ -130,8 +131,8 @@ function displayExpenseCard(expenseTypesMockDB) {
           amount,
           category: expenseTypesMockDB[i].key,
         });
-
-        addTransaction(tx);
+        analytics.addTransaction(tx);
+        //addTransaction(tx);
         makeCalcs();
       } catch (error) {
         alert(error.message);
@@ -191,17 +192,17 @@ const transactionService = {
     meta = {},
     createdAt = new Date(),
   }) {
-    if (typeof amount !== "number" || amount <= 0) {
+    if (typeof amount !== "number" || Number.isNaN(amount) || amount <= 0) {
       throw new Error("Amount must be a number greater than 0");
     }
     return new transaction(amount, category, createdAt, meta);
   },
 };
 
-const transactions = [];
-function addTransaction(tx) {
-  transactions.push(tx);
-}
+//const transactions = [];
+//function addTransaction(tx) {
+//transactions.push(tx);
+//}
 
 const mainScreen = {
   screenEl: document.getElementById("screenMain"),
@@ -247,7 +248,8 @@ const screenManager = {
 
   showHistory() {
     mainScreen.hide();
-    historyScreen.render(transactions);
+    //historyScreen.render(transactions);
+    historyScreen.render(analytics.getAll());
     historyScreen.show();
   },
 };
