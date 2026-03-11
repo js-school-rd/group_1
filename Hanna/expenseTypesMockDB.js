@@ -1,0 +1,60 @@
+export const expenseTypesMockDB = [
+  {
+    key: "FOOD",
+    name: "Food",
+    icon: "image/food-outline.svg",
+    isActive: true,
+  },
+  { key: "ALCO", name: "Alco", icon: "image/glass-wine.svg", isActive: true },
+  {
+    key: "ENTERTAINMENT",
+    name: "Entertainment",
+    icon: "image/theater.svg",
+    isActive: true,
+  },
+  {
+    key: "TRANSPORT",
+    name: "Transport",
+    icon: "image/train-car.svg",
+    isActive: true,
+  },
+  {
+    key: "HEALTH",
+    name: "Health",
+    icon: "image/medication.svg",
+    isActive: true,
+  },
+  {
+    key: "EDUCATION",
+    name: "Education",
+    icon: "image/school-outline.svg",
+    isActive: true,
+  },
+  { key: "TRAVEL", name: "Travel", icon: "image/earth.svg", isActive: true },
+  {
+    key: "SHOPPING",
+    name: "Shopping",
+    icon: "image/cart-minus.svg",
+    isActive: true,
+  },
+  {
+    key: "SUBSCRIPTIONS",
+    name: "Subscriptions",
+    icon: "image/youtube-subscription.svg",
+    isActive: true,
+  },
+  {
+    key: "GIFTS",
+    name: "Gifts",
+    icon: "image/gift-outline.svg",
+    isActive: true,
+  },
+  { key: "PETS", name: "Pets", icon: "image/paw.svg", isActive: true },
+  { key: "TAXI", name: "Taxi", icon: "image/taxi.svg", isActive: true },
+  {
+    key: "OTHER",
+    name: "Other",
+    icon: "image/hand-coin-outline.svg",
+    isActive: true,
+  },
+];

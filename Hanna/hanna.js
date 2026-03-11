@@ -1,263 +1,188 @@
-let initialBudget = 5000;
-const amountInput = document.getElementById("amountInput");
-const analytics = createAnalyticsModule([]);
+import { expenseTypesMockDB } from "./expenseTypesMockDB.js";
+import { ScreenManager } from "./screenManager.js";
+import { returnExpenseCardData } from "./expenseCardManager.js";
+import { TransactionSyncService } from "./transactionSyncService.js";
 
-//моковая БД
-const expenseTypesMockDB = [
-  {
-    key: "FOOD",
-    name: "Food",
-    icon: "image/food-outline.svg",
-    isActive: true,
-  },
-  { key: "ALCO", name: "Alco", icon: "image/glass-wine.svg", isActive: true },
-  {
-    key: "ENTERTAINMENT",
-    name: "Entertainment",
-    icon: "image/theater.svg",
-    isActive: true,
-  },
-  {
-    key: "TRANSPORT",
-    name: "Transport",
-    icon: "image/train-car.svg",
-    isActive: true,
-  },
-  {
-    key: "HEALTH",
-    name: "Health",
-    icon: "image/medication.svg",
-    isActive: true,
-  },
-  {
-    key: "EDUCATION",
-    name: "Education",
-    icon: "image/school-outline.svg",
-    isActive: true,
-  },
-  { key: "TRAVEL", name: "Travel", icon: "image/earth.svg", isActive: true },
-  {
-    key: "SHOPPING",
-    name: "Shopping",
-    icon: "image/cart-minus.svg",
-    isActive: true,
-  },
-  {
-    key: "SUBSCRIPTIONS",
-    name: "Subscriptions",
-    icon: "image/youtube-subscription.svg",
-    isActive: true,
-  },
-  {
-    key: "GIFTS",
-    name: "Gifts",
-    icon: "image/gift-outline.svg",
-    isActive: true,
-  },
-  { key: "PETS", name: "Pets", icon: "image/paw.svg", isActive: true },
-  { key: "TAXI", name: "Taxi", icon: "image/taxi.svg", isActive: true },
-  {
-    key: "OTHER",
-    name: "Other",
-    icon: "image/hand-coin-outline.svg",
-    isActive: true,
-  },
-];
+const syncService = new TransactionSyncService();
 
-function returnExpenseCardData(expenseType) {
-  const container = document.createElement("button");
-  container.classList.add("expenseCardInnerContainer");
-
-  const cardIconContainer = document.createElement("div");
-  cardIconContainer.classList.add("expenseCardIcon");
-  const cardICon = document.createElement("img");
-  cardICon.src = expenseType.icon;
-  cardICon.alt = expenseType.key;
-  cardIconContainer.appendChild(cardICon);
-
-  const cardHeaderContainer = document.createElement("div");
-  cardHeaderContainer.classList.add("expenseCardHeader");
-  cardHeaderContainer.textContent = expenseType.name;
-
-  container.appendChild(cardIconContainer);
-  container.appendChild(cardHeaderContainer);
-
-  return container;
-}
-
-amountInput.addEventListener;
-
-function displayBudgetAfterDOMLoading(initialBudget) {
-  document.getElementById("budgetOutput").textContent = initialBudget;
-}
-
-displayBudgetAfterDOMLoading(initialBudget);
-
-function makeCalcs() {
-  const budgetInputValue = parseFloat(amountInput.value);
-  if (!/^\d+(\.\d+)?$/.test(budgetInputValue)) {
-    alert("Wrong input data! Only positive numbers are allowed");
-    return;
+class Transaction {
+  constructor(amount, category, createdAt = new Date(), meta = {}) {
+    this.amount = amount;
+    this.category = category;
+    this.createdAt = createdAt;
+    this.meta = meta;
   }
-  let budgetBeforeCalcs = initialBudget;
-  initialBudget = calcBudget(initialBudget, budgetInputValue);
-  renderBudget(
-    initialBudget,
-    budgetBeforeCalcs,
-    budgetInputValue,
-    document.getElementById("budgetOutput"),
-  );
-}
 
-amountInput.addEventListener("keydown", function (keyboardButton) {
-  if (keyboardButton.key === "Enter") {
-    keyboardButton.preventDefault();
-    makeCalcs();
+  f() {
+    const metaText =
+      this.meta && Object.keys(this.meta).length > 0
+        ? ` - ${JSON.stringify(this.meta)}`
+        : "";
+
+    return `$${this.amount} - ${this.category} - ${this.createdAt.toLocaleDateString()}${metaText}`;
   }
-});
 
-function displayExpenseCard(expenseTypesMockDB) {
-  const container = document.getElementById("expenseCardOuterContainer");
-  container.replaceChildren();
-
-  for (let i = 0; i < expenseTypesMockDB.length; i++) {
-    const card = returnExpenseCardData(expenseTypesMockDB[i]);
-
-    card.addEventListener("click", function () {
-      try {
-        const amount = parseFloat(amountInput.value);
-
-        const tx = transactionService.createExpense({
-          amount,
-          category: expenseTypesMockDB[i].key,
-        });
-        analytics.addTransaction(tx);
-        //addTransaction(tx);
-        makeCalcs();
-      } catch (error) {
-        alert(error.message);
-      } finally {
-        amountInput.value = "";
-      }
-    });
-
-    container.appendChild(card);
+  toJson() {
+    return {
+      amount: this.amount,
+      category: this.category,
+      createdAt: this.createdAt,
+      meta: this.meta,
+    };
   }
 }
 
-displayExpenseCard(expenseTypesMockDB);
-
-function calcBudget(currentBudget, expenses) {
-  if (isNaN(expenses)) expenses = 0;
-  return currentBudget - expenses;
-}
-
-function renderBudget(newBudget, budgetBeforeCalcs, expenses, elemToEdit) {
-  if (expenses > budgetBeforeCalcs) {
-    elemToEdit.classList.add("value--negative");
-  } else {
-    elemToEdit.classList.remove("value--negative");
-  }
-  elemToEdit.textContent = newBudget;
-}
-
-function transaction(amount, category, createdAt, meta) {
-  this.amount = amount;
-  this.category = category;
-  this.createdAt = createdAt;
-  this.meta = meta || {};
-}
-
-transaction.prototype.f = function () {
-  const metaText =
-    this.meta && Object.keys(this.meta).length > 0
-      ? ` - ${JSON.stringify(this.meta)}`
-      : "";
-  return `$${this.amount} - ${this.category} - ${this.createdAt.toLocaleDateString()}${metaText}`;
-};
-
-transaction.prototype.toJson = function () {
-  return {
-    amount: this.amount,
-    category: this.category,
-    createdAt: this.createdAt,
-    meta: this.meta,
-  };
-};
-
-const transactionService = {
-  createExpense: function ({
-    amount,
-    category,
-    meta = {},
-    createdAt = new Date(),
-  }) {
+class TransactionService {
+  createExpense({ amount, category, meta = {}, createdAt = new Date() }) {
     if (typeof amount !== "number" || Number.isNaN(amount) || amount <= 0) {
       throw new Error("Amount must be a number greater than 0");
     }
-    return new transaction(amount, category, createdAt, meta);
-  },
-};
 
-//const transactions = [];
-//function addTransaction(tx) {
-//transactions.push(tx);
-//}
+    return new Transaction(amount, category, createdAt, meta);
+  }
+}
 
-const mainScreen = {
-  screenEl: document.getElementById("screenMain"),
+class BudgetManager {
+  calcBudget(currentBudget, expenses) {
+    if (Number.isNaN(expenses)) {
+      return currentBudget;
+    }
 
-  show() {
-    this.screenEl.style.display = "block";
-  },
+    return currentBudget - expenses;
+  }
 
-  hide() {
-    this.screenEl.style.display = "none";
-  },
+  renderBudget(newBudget, budgetBeforeCalcs, expenses, elemToEdit) {
+    if (expenses > budgetBeforeCalcs) {
+      elemToEdit.classList.add("value--negative");
+    } else {
+      elemToEdit.classList.remove("value--negative");
+    }
 
-  render() {},
-};
+    elemToEdit.textContent = newBudget;
+  }
+}
 
-const historyScreen = {
-  screenEl: document.getElementById("screenHistory"),
-  listEl: document.getElementById("historyList"),
+class ExpenseCardManager {
+  constructor({
+    containerId,
+    amountInput,
+    expenseTypes,
+    transactionService,
+    analytics,
+    onExpenseAdded,
+  }) {
+    this.container = document.getElementById(containerId);
+    this.amountInput = amountInput;
+    this.expenseTypes = expenseTypes;
+    this.transactionService = transactionService;
+    this.analytics = analytics;
+    this.onExpenseAdded = onExpenseAdded;
+  }
 
-  show() {
-    this.screenEl.style.display = "block";
-  },
+  render() {
+    this.container.replaceChildren();
 
-  hide() {
-    this.screenEl.style.display = "none";
-  },
+    for (let i = 0; i < this.expenseTypes.length; i++) {
+      const expenseType = this.expenseTypes[i];
+      const card = returnExpenseCardData(expenseType);
 
-  render(transactions) {
-    this.listEl.replaceChildren();
-    Array.prototype.forEach.call(transactions, (tx) => {
-      const item = document.createElement("div");
-      item.textContent = tx.f();
-      this.listEl.appendChild(item);
+      card.addEventListener("click", () => {
+        try {
+          const amount = parseFloat(this.amountInput.value);
+
+          const tx = this.transactionService.createExpense({
+            amount,
+            category: expenseType.key,
+          });
+
+          this.analytics.addTransaction(tx);
+          this.onExpenseAdded();
+        } catch (error) {
+          alert(error.message);
+        } finally {
+          this.amountInput.value = "";
+        }
+      });
+
+      this.container.appendChild(card);
+    }
+  }
+}
+
+class BudgetApp {
+  constructor() {
+    this.initialBudget = 5000;
+
+    this.amountInput = document.getElementById("amountInput");
+    this.budgetOutput = document.getElementById("budgetOutput");
+    this.navMain = document.getElementById("navMain");
+    this.navHistory = document.getElementById("navHistory");
+
+    this.analytics = createAnalyticsModule([]);
+    this.screenManager = new ScreenManager(this.analytics);
+    this.transactionService = new TransactionService();
+    this.budgetManager = new BudgetManager();
+
+    this.expenseCardManager = new ExpenseCardManager({
+      containerId: "expenseCardOuterContainer",
+      amountInput: this.amountInput,
+      expenseTypes: expenseTypesMockDB,
+      transactionService: this.transactionService,
+      analytics: this.analytics,
+      onExpenseAdded: () => this.makeCalcs(),
     });
-  },
-};
+  }
 
-const screenManager = {
-  showMain() {
-    mainScreen.show();
-    historyScreen.hide();
-  },
+  init() {
+    this.displayBudget();
+    this.bindEvents();
+    this.expenseCardManager.render();
+  }
 
-  showHistory() {
-    mainScreen.hide();
-    //historyScreen.render(transactions);
-    historyScreen.render(analytics.getAll());
-    historyScreen.show();
-  },
-};
+  displayBudget() {
+    this.budgetOutput.textContent = this.initialBudget;
+  }
 
-document.getElementById("navMain").addEventListener("click", () => {
-  screenManager.showMain();
-});
+  makeCalcs() {
+    const budgetInputValue = parseFloat(this.amountInput.value);
 
-document.getElementById("navHistory").addEventListener("click", () => {
-  screenManager.showHistory();
-});
+    if (Number.isNaN(budgetInputValue) || budgetInputValue <= 0) {
+      alert("Wrong input data! Only positive numbers are allowed");
+      return;
+    }
+
+    const budgetBeforeCalcs = this.initialBudget;
+
+    this.initialBudget = this.budgetManager.calcBudget(
+      this.initialBudget,
+      budgetInputValue,
+    );
+
+    this.budgetManager.renderBudget(
+      this.initialBudget,
+      budgetBeforeCalcs,
+      budgetInputValue,
+      this.budgetOutput,
+    );
+  }
+
+  bindEvents() {
+    this.amountInput.addEventListener("keydown", (keyboardButton) => {
+      if (keyboardButton.key === "Enter") {
+        keyboardButton.preventDefault();
+        this.makeCalcs();
+      }
+    });
+
+    this.navMain.addEventListener("click", () => {
+      this.screenManager.showMain();
+    });
+
+    this.navHistory.addEventListener("click", () => {
+      this.screenManager.showHistory();
+    });
+  }
+}
+
+const app = new BudgetApp();
+app.init();
