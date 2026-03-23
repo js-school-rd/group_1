@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Конвертер валют</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: system-ui, sans-serif;
+        padding: 2rem;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+      .row {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        align-items: center;
+      }
+      input,
+      select {
+        padding: 0.5rem;
+        font-size: 1rem;
+      }
+      input {
+        flex: 1;
+      }
+      select {
+        min-width: 80px;
+      }
+      input[readonly] {
+        background: #f0f0f0;
+      }
+      .error {
+        color: #c00;
+        margin-top: 0.5rem;
+      }
+      .result {
+        font-size: 1.2rem;
+        margin-top: 1rem;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Конвертер валют</h1>
+
+    <!-- Сумма «из» + выбор валюты «из» -->
+    <div class="row">
+      <input
+        type="number"
+        id="amount"
+        placeholder="Сумма"
+        value="100"
+        min="0"
+        step="0.01"
+      />
+      <select id="from" title="Валюта, из которой конвертируем">
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="GBP">GBP</option>
+        <option value="CHF">CHF</option>
+        <option value="JPY">JPY</option>
+        <option value="CAD">CAD</option>
+        <option value="AUD">AUD</option>
+        <option value="CNY">CNY</option>
+        <option value="INR">INR</option>
+        <option value="BRL">BRL</option>
+        <option value="CZK">CZK</option>
+        <option value="DKK">DKK</option>
+        <option value="HKD">HKD</option>
+        <option value="HUF">HUF</option>
+        <option value="IDR">IDR</option>
+        <option value="ILS">ILS</option>
+        <option value="ISK">ISK</option>
+        <option value="KRW">KRW</option>
+        <option value="MXN">MXN</option>
+        <option value="MYR">MYR</option>
+        <option value="NOK">NOK</option>
+        <option value="NZD">NZD</option>
+        <option value="PHP">PHP</option>
+        <option value="PLN">PLN</option>
+        <option value="RON">RON</option>
+        <option value="SEK">SEK</option>
+        <option value="SGD">SGD</option>
+        <option value="THB">THB</option>
+        <option value="TRY">TRY</option>
+        <option value="ZAR">ZAR</option>
+      </select>
+    </div>
+
+    <!-- Результат «в» + выбор валюты «в» -->
+    <div class="row">
+      <input type="text" id="result" placeholder="Результат" readonly />
+      <select id="to" title="Валюта, в которую конвертируем">
+        <option value="EUR">EUR</option>
+        <option value="USD">USD</option>
+        <option value="GBP">GBP</option>
+        <option value="CHF">CHF</option>
+        <option value="JPY">JPY</option>
+        <option value="CAD">CAD</option>
+        <option value="AUD">AUD</option>
+        <option value="CNY">CNY</option>
+        <option value="INR">INR</option>
+        <option value="BRL">BRL</option>
+        <option value="CZK">CZK</option>
+        <option value="DKK">DKK</option>
+        <option value="HKD">HKD</option>
+        <option value="HUF">HUF</option>
+        <option value="IDR">IDR</option>
+        <option value="ILS">ILS</option>
+        <option value="ISK">ISK</option>
+        <option value="KRW">KRW</option>
+        <option value="MXN">MXN</option>
+        <option value="MYR">MYR</option>
+        <option value="NOK">NOK</option>
+        <option value="NZD">NZD</option>
+        <option value="PHP">PHP</option>
+        <option value="PLN">PLN</option>
+        <option value="RON">RON</option>
+        <option value="SEK">SEK</option>
+        <option value="SGD">SGD</option>
+        <option value="THB">THB</option>
+        <option value="TRY">TRY</option>
+        <option value="ZAR">ZAR</option>
+      </select>
+    </div>
+
+    <button type="button" id="convertBtn">Конвертировать</button>
+    <p id="error" class="error"></p>
+
+    <!--
+    ═══════════════════════════════════════════════════════════════
+    ЗАДАНИЯ — реализуй функции в app.js
+    ═══════════════════════════════════════════════════════════════
+
+    API: https://api.frankfurter.app/latest?from=USD&to=EUR
+
+    ── PROMISE (then/catch) ─────────────────────────────────────
+    1. fetchRates(baseCurrency)
+       • Возвращает Promise с курсами для базы baseCurrency
+       • URL: https://api.frankfurter.app/latest?from={baseCurrency}
+       • .then(res => res.json()) для парсинга
+       • Используй при загрузке страницы — загрузить курсы для USD
+         и вывести в консоль (или показать дату обновления)
+
+    2. Обработка ошибок
+       • .catch() при вызове fetchRates — вывести сообщение в #error
+
+    ── ASYNC/AWAIT ──────────────────────────────────────────────
+    3. convert(amount, from, to)
+       • async-функция
+       • await fetch(...), await res.json()
+       • Вернуть amount * rates[to]
+       • try/catch для ошибок сети и API
+
+    4. validateInput(amount, from, to) — проверка до конвертации
+    5. getCurrencies() — async, список валют с API
+    6. fetchRatesCached() — кэш курсов на 5 мин (опц.)
+
+    При клике: validateInput → convert → результат в #result
+
+    Подсказки: currency-converter-hints.md
+    ═══════════════════════════════════════════════════════════════
+  -->
+
+    <script src="app.js"></script>
+    <script>
+      // Всё подключено — реализуй 5 функций в app.js
+
+      // При загрузке: курсы + список валют
+      fetchRates("USD")
+        .then((data) => console.log("Курсы загружены:", data?.date))
+        .catch(() => {
+          document.getElementById("error").textContent = "Курсы не загружены";
+        });
+      getCurrencies().then((currencies) =>
+        console.log("Валюты:", Object.keys(currencies).length),
+      );
+
+      document
+        .getElementById("convertBtn")
+        .addEventListener("click", async () => {
+          const amount = parseFloat(document.getElementById("amount").value);
+          const from = document.getElementById("from").value;
+          const to = document.getElementById("to").value;
+          document.getElementById("error").textContent = "";
+
+          const validationError = validateInput(amount, from, to);
+          if (validationError) {
+            document.getElementById("error").textContent = validationError;
+            return;
+          }
+
+          try {
+            const result = await convert(amount, from, to);
+            document.getElementById("result").value =
+              result != null ? result.toFixed(2) : "";
+          } catch (err) {
+            document.getElementById("error").textContent =
+              err.message || "Ошибка";
+          }
+        });
+    </script>
+  </body>
+</html>
